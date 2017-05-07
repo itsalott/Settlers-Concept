@@ -62,7 +62,7 @@ public:
 	virtual void useTool() {}
 };
 
-class IWeapon {
+class IWeapon : ITool {
 public:
 	virtual int getFireRange() { return 0; }
 	virtual int getPreciseness() { return 0; }
@@ -86,13 +86,13 @@ protected:
 	}
 };
 
-class Weapon : public Tool {
+class Weapon : public IWeapon {
 public:
-	Weapon(int fireRange, int precisness) : Tool(EnumToolTypes::WeaponTool), fireRange(fireRange), preciseness(precisness) {}
+	Weapon() {}
 	~Weapon() {}
 
-	virtual int getFireRange() { return fireRange; }
-	virtual int getPreciseness() { return preciseness; }
+	int getFireRange() override { return 5; }
+	int getPreciseness() override { return 10; }
 
 	void useTool() override {
 		std::cout << "Weapon used" << std::endl;
@@ -103,26 +103,26 @@ protected:
 	int preciseness;
 };
 
-class WeaponUpgrade : public Weapon {
+class WeaponUpgrade : public IWeapon {
 public:
-	WeaponUpgrade(Weapon baseWeapon) : weapon(baseWeapon), Weapon(baseWeapon.getFireRange(), baseWeapon.getPreciseness()) {}
+	WeaponUpgrade(IWeapon *baseWeapon) : weapon(baseWeapon) {}
 	~WeaponUpgrade() {}
 
 	int getFireRange() override{
-		return weapon.getFireRange();
+		return weapon->getFireRange();
 	}
 
 	int getPreciseness() override {
-		return weapon.getPreciseness();
+		return weapon->getPreciseness();
 	}
 
 protected:
-	Weapon weapon;
+	IWeapon* weapon;
 };
 
 class GunpowderUpgrade : public WeaponUpgrade {
 public:
-	GunpowderUpgrade(Weapon baseWeapon) : WeaponUpgrade(baseWeapon) {}
+	GunpowderUpgrade(IWeapon *baseWeapon) : WeaponUpgrade(baseWeapon) {}
 	~GunpowderUpgrade() {}
 
 	int getFireRange() override{
@@ -133,7 +133,7 @@ public:
 
 class BarrelUpgrade : public WeaponUpgrade {
 public:
-	BarrelUpgrade(Weapon baseWeapon) : WeaponUpgrade(baseWeapon) {}
+	BarrelUpgrade(IWeapon *baseWeapon) : WeaponUpgrade(baseWeapon) {}
 	~BarrelUpgrade() {}
 
 	int getPreciseness() override {
@@ -193,14 +193,16 @@ int main()
 {
 	World* world = new World();
 
-	Weapon basicWeapon = Weapon(5, 10);
-	std::cout << "Basic weapon has " << basicWeapon.getPreciseness() << " preciseness and " << basicWeapon.getFireRange() << " fire range." << std::endl;
+	IWeapon *weapon = new Weapon();
+	std::cout << "Basic weapon has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
 
-	BarrelUpgrade barrelUpgrade = GunpowderUpgrade(basicWeapon);
-	std::cout << "Weapon upgraded with barrel has " << barrelUpgrade.getPreciseness() << " preciseness and " << barrelUpgrade.getFireRange() << " fire range." << std::endl;
+	weapon = new GunpowderUpgrade(weapon);
+	std::cout << "Weapon upgraded with gunpowder has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
 
-	GunpowderUpgrade gunpowderUpgrade = GunpowderUpgrade(barrelUpgrade);
-	std::cout << "Weapon upgraded with gunpowder has " << gunpowderUpgrade.getPreciseness() << " preciseness and " << gunpowderUpgrade.getFireRange() << " fire range." << std::endl;
+	weapon = new BarrelUpgrade(weapon);
+	std::cout << "Weapon upgraded with barrel has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+
+	
 
 	Settler settler = world->CreateNewSettler(Builder);
 	Settler settler2 = world->CreateNewSettler(Builder);
