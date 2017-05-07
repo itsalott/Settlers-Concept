@@ -86,9 +86,9 @@ protected:
 	}
 };
 
-class Weapon : public IWeapon {
+class Weapon : public Tool, public IWeapon {
 public:
-	Weapon() {}
+	Weapon(): Tool(WeaponTool) {}
 	~Weapon() {}
 
 	int getFireRange() override { return 5; }
