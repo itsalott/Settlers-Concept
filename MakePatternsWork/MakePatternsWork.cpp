@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <list>
 
 class Mesh {
 public:
@@ -89,6 +90,15 @@ public:
 	}
 };
 
+class FishingNetImp : public ToolImp {
+public:
+	FishingNetImp() { }
+
+	void useTool() override {
+		std::cout << "Catched fish" << std::endl;
+	}
+};
+
 class IWeapon : ITool {
 public:
 	virtual int getFireRange() { return 0; }
@@ -125,6 +135,12 @@ class Axe : public Tool {
 public:
 	Axe() { imp = new AxeImp(); }
 	~Axe() {}
+};
+
+class FishingNet : public Tool {
+public:
+	FishingNet() { imp = new FishingNetImp(); }
+	~FishingNet() {}
 };
 
 class WeaponUpgrade : public IWeapon {
@@ -167,9 +183,108 @@ public:
 
 // ------------------ END TOOLS -------------------
 
+// ---------- RESOURCE GROUPS -------------------
+
+class ResourceGroup {
+public:
+	ResourceGroup() : pos(0, 0, 0)
+	{
+		resourcesLeft = 10;
+	}
+	~ResourceGroup() {}
+	bool isEmpty() { return resourcesLeft <= 0; }
+	int harvest() {
+		std::cout << "Current amount of resources: " << resourcesLeft << std::endl;
+		resourcesLeft--;
+		return 1;
+	}
+	Vector3 pos;
+
+private:
+	int resourcesLeft;
+};
+
+class Forest : public ResourceGroup {
+public:
+	Forest() : ResourceGroup() {}
+	~Forest() {}
+};
+
+class FishingSpot : public ResourceGroup {
+public:
+	FishingSpot() : ResourceGroup() {}
+	~FishingSpot() {}
+};
+
+class Mediator {
+public:
+	static Mediator* Instance();
+	std::list<Forest*> forests;
+	std::list<FishingSpot*> fishingSpots;
+
+	Forest* getBestForest(Vector3 settlerPos) {
+		Forest* nearestForest = nullptr;
+		float distance = 1000;
+
+		std::list<Forest*>::iterator it;
+		for (it = forests.begin(); it != forests.end(); it++)
+		{
+			float newDistance = distanceBetweenVectors((*it)->pos, settlerPos);
+			if (newDistance < distance && !(*it)->isEmpty()) {
+				distance = newDistance;
+				nearestForest = *it;
+			}
+		}
+
+		return nearestForest;
+	}
+
+	FishingSpot* getBestFishingSpot(Vector3 settlerPos) {
+		FishingSpot* nearestFishingSpot = nullptr;
+		float distance = 1000;
+
+		std::list<FishingSpot*>::iterator it;
+		for (it = fishingSpots.begin(); it != fishingSpots.end(); it++)
+		{
+			float newDistance = distanceBetweenVectors((*it)->pos, settlerPos);
+			if (newDistance < distance && !(*it)->isEmpty()) {
+				distance = newDistance;
+				nearestFishingSpot = *it;
+			}
+		}
+
+		return nearestFishingSpot;
+	}
+
+	float distanceBetweenVectors(Vector3 a, Vector3 b)
+	{
+		return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
+	}
+private:
+	static Mediator* instance;
+	Mediator() {}
+	~Mediator() {}
+};
+
+Mediator* Mediator::instance = 0;
+Mediator* Mediator::Instance() {
+	if (!instance)
+	{
+		instance = new Mediator();
+	}
+	return instance;
+}
+
+// ---------------------------------------------------------------------
+
+enum Profession {
+	WoodChopper = 0,
+	Fisherman
+};
+
 class Settler {
 public:
-	Settler(SettlerType* pType, Tool* tool = nullptr) : type(pType), pos(Vector3(0, 0, 0)), currentTool(tool) {	}
+	Settler(SettlerType* pType, Profession prof, Tool* tool = nullptr) : type(pType), pos(Vector3(0, 0, 0)), currentTool(tool), professionType(prof) {	}
 	~Settler() { }
 	
 	SettlerType* type;
@@ -178,6 +293,8 @@ public:
 		if (currentTool == nullptr) return;
 
 		currentTool->useTool();
+		if (currentRG == nullptr || currentRG->isEmpty()) findNewResourceGroup();
+		else currentRG->harvest();
 	}
 
 	void switchTool(Tool* newTool) {
@@ -187,6 +304,21 @@ public:
 private:
 	Vector3 pos;
 	Tool* currentTool;
+
+	Profession professionType;
+	ResourceGroup* currentRG;
+
+	void findNewResourceGroup() {
+		if ((int)professionType == 0)
+		{
+			currentRG = Mediator::Instance()->getBestForest(pos);
+			//std::cout << "Found new resource group: " << currentRG->isEmpty() << std::endl;
+		}
+		else if((int)professionType == 1)
+		{
+			currentRG = Mediator::Instance()->getBestFishingSpot(pos);
+		}
+	}
 };
 
 class World {
@@ -199,19 +331,19 @@ public:
 		types[3] = new SettlerType("TraderModel", "TraderTexture", "TraderMaterial", Trader);
 	}
 
-	Settler CreateNewSettler(EnumSettlerType type, Tool* tool = nullptr) {
+	Settler CreateNewSettler(EnumSettlerType type, Profession prof, Tool* tool = nullptr) {
 		switch(type) {
 		case Builder:
-			return Settler(types[0], tool);
+			return Settler(types[0], prof, tool);
 			break;
 		case Civilian:
-			return Settler(types[1], tool);
+			return Settler(types[1], prof, tool);
 			break;
 		case Fighter:
-			return Settler(types[2], tool);
+			return Settler(types[2], prof, tool);
 			break;
 		case Trader:
-			return Settler(types[3], tool);
+			return Settler(types[3], prof, tool);
 			break;
 		}
 	}
@@ -224,31 +356,24 @@ int main()
 {
 	World* world = new World();
 
-	Tool* weapon = new Weapon();
+	Forest* forest1 = new Forest();
+	Forest* forest2 = new Forest();
+	Mediator::Instance()->forests.push_back(forest1);
+	Mediator::Instance()->forests.push_back(forest2);
+
+	Tool* fishingNet = new FishingNet();
 	Tool* axe = new Axe();
 
-	Settler settler = world->CreateNewSettler(Builder, weapon);
-	Settler settler2 = world->CreateNewSettler(Builder, axe);
+	Settler settler = world->CreateNewSettler(Builder, Fisherman, fishingNet);
+	Settler settler2 = world->CreateNewSettler(Builder, WoodChopper, axe);
 
-	for(int i = 0; i < 3; ++i) {
+	for(int i = 0; i < 30; ++i) {
+		char c;
+		std::cout << "Press Enter" << std::endl;
+		std::cin >> c;
+
 		settler.update();
 		settler2.update();
-
-		char c;
-		std::cin >> c;
-	}
-
-	settler.switchTool(axe);
-	settler2.switchTool(weapon);
-
-	std::cout << "switched the two tools" << std::endl;
-
-	for (int i = 0; i < 3; ++i) {
-		settler.update();
-		settler2.update();
-
-		char c;
-		std::cin >> c;
 	}
 
 	//IWeapon *weapon = new Weapon();
