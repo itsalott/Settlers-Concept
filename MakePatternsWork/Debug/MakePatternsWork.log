@@ -1,0 +1,4 @@
+﻿  MakePatternsWork.cpp
+e:\gebruikers\rosa corstjens\documenten\makepatternswork\makepatternswork.cpp(93): warning C4715: 'World::CreateNewSettler': not all control paths return a value
+  MakePatternsWork.vcxproj -> E:\Gebruikers\Rosa Corstjens\Documenten\MakePatternsWork\Debug\MakePatternsWork.exe
+  MakePatternsWork.vcxproj -> E:\Gebruikers\Rosa Corstjens\Documenten\MakePatternsWork\Debug\MakePatternsWork.pdb (Full PDB)
