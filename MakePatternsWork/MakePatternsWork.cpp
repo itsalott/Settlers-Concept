@@ -62,45 +62,69 @@ public:
 	virtual void useTool() {}
 };
 
+class ToolImp : public ITool {
+public:
+	ToolImp() { }
+
+	virtual void useTool() override {
+		std::cout << "I don't do anything" << std::endl;
+	}
+};
+
+class WeaponImp : public ToolImp {
+public:
+	WeaponImp() { }
+
+	void useTool() override {
+		std::cout << "Attacked" << std::endl;
+	}
+};
+
+class AxeImp : public ToolImp {
+public:
+	AxeImp() { }
+
+	void useTool() override {
+		std::cout << "Harvested wood" << std::endl;
+	}
+};
+
 class IWeapon : ITool {
 public:
 	virtual int getFireRange() { return 0; }
 	virtual int getPreciseness() { return 0; }
 };
 
-enum EnumToolTypes {
-	WeaponTool = 0,
-	AxeTool
-};
-
 class Tool : public ITool {
 public:
-	Tool(EnumToolTypes type) : type(type) {}
+	Tool() { imp = new ToolImp(); }
 	~Tool() {}
+	
+	void useTool() override {
+		imp->useTool();
+	}
 
 protected: 
-	EnumToolTypes type;
-
-	void useTool() override {
-		std::cout << "Basic tool used" << std::endl;
-	}
+	ToolImp* imp;
 };
 
 class Weapon : public Tool, public IWeapon {
 public:
-	Weapon(): Tool(WeaponTool) {}
+	Weapon() { imp = new WeaponImp(); }
 	~Weapon() {}
 
 	int getFireRange() override { return fireRange; }
 	int getPreciseness() override { return preciseness; }
 
-	void useTool() override {
-		std::cout << "Weapon used" << std::endl;
-	}
-
 protected:
 	int fireRange = 5;
 	int preciseness = 10;
+};
+
+class Axe : public Tool {
+public:
+	Axe() { imp = new AxeImp(); }
+	~Axe() {}
 };
 
 class WeaponUpgrade : public IWeapon {
@@ -149,6 +173,13 @@ public:
 	~Settler() { }
 	
 	SettlerType* type;
+	
+	void update() {
+		if (currentTool == nullptr) return;
+
+		currentTool->useTool();
+	}
+
 	void switchTool(Tool* newTool) {
 		currentTool = newTool;
 	}
@@ -193,24 +224,44 @@ int main()
 {
 	World* world = new World();
 
-	IWeapon *weapon = new Weapon();
-	std::cout << "Basic weapon has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+	Tool* weapon = new Weapon();
+	Tool* axe = new Axe();
 
-	weapon = new GunpowderUpgrade(weapon);
-	std::cout << "Weapon upgraded with gunpowder has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+	Settler settler = world->CreateNewSettler(Builder, weapon);
+	Settler settler2 = world->CreateNewSettler(Builder, axe);
 
-	weapon = new BarrelUpgrade(weapon);
-	std::cout << "Weapon upgraded with barrel has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+	for(int i = 0; i < 3; ++i) {
+		settler.update();
+		settler2.update();
 
-	
+		char c;
+		std::cin >> c;
+	}
 
-	Settler settler = world->CreateNewSettler(Builder);
-	Settler settler2 = world->CreateNewSettler(Builder);
+	settler.switchTool(axe);
+	settler2.switchTool(weapon);
+
+	std::cout << "switched the two tools" << std::endl;
+
+	for (int i = 0; i < 3; ++i) {
+		settler.update();
+		settler2.update();
+
+		char c;
+		std::cin >> c;
+	}
+
+	//IWeapon *weapon = new Weapon();
+	//std::cout << "Basic weapon has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+
+	//weapon = new GunpowderUpgrade(weapon);
+	//std::cout << "Weapon upgraded with gunpowder has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+
+	//weapon = new BarrelUpgrade(weapon);
+	//std::cout << "Weapon upgraded with barrel has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+
 	//std::cout <<  "I'm a Settler of type " << settler.type << std::endl;
 	//std::cout <<  "I'm a Settler of type " << settler2.type << std::endl;
-
-	char c;
-	std::cin >> c;
 
     return 0;
 }
