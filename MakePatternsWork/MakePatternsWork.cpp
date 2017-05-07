@@ -65,7 +65,11 @@ public:
 	}
 	~ResourceGroup() {}
 	bool isEmpty(){ return resourcesLeft <= 0; }
-	int harvest(){ resourcesLeft--; return 1; }
+	int harvest() {
+		std::cout << "Current amount of resources: " << resourcesLeft << std::endl;
+		resourcesLeft--; 
+		return 1;
+	}
 	Vector3 pos;
 
 private:
@@ -74,37 +78,31 @@ private:
 
 class Forest : public ResourceGroup{
 public:
-	Forest() {}
+	Forest() : ResourceGroup() {}
 	~Forest() {}
 };
 
 class FishingSpot : public ResourceGroup{
 public:
-	FishingSpot() {}
+	FishingSpot() : ResourceGroup() {}
 	~FishingSpot() {}
 };
 
 class Mediator{
 public:
-	static Mediator* Instance(){ 
-		if (instance == nullptr)
-		{
-			instance = new Mediator();
-		}
-		return instance;
-	}
+	static Mediator* Instance();
 	std::list<Forest*> forests;
 	std::list<FishingSpot*> fishingSpots;
 
 	Forest* getBestForest(Vector3 settlerPos){
-		Forest* nearestForest;
+		Forest* nearestForest = nullptr;
 		float distance = 1000;
 
 		std::list<Forest*>::iterator it;
 		for (it = forests.begin(); it != forests.end(); it++)
 		{
 			float newDistance = distanceBetweenVectors((*it)->pos, settlerPos);
-			if (newDistance < distance){
+			if (newDistance < distance && !(*it)->isEmpty()){
 				distance = newDistance;
 				nearestForest = *it;
 			}
@@ -114,14 +112,14 @@ public:
 	}
 
 	FishingSpot* getBestFishingSpot(Vector3 settlerPos){
-		FishingSpot* nearestFishingSpot;
+		FishingSpot* nearestFishingSpot = nullptr;
 		float distance = 1000;
 
 		std::list<FishingSpot*>::iterator it;
 		for (it = fishingSpots.begin(); it != fishingSpots.end(); it++)
 		{
 			float newDistance = distanceBetweenVectors((*it)->pos, settlerPos);
-			if (newDistance < distance){
+			if (newDistance < distance && !(*it)->isEmpty()){
 				distance = newDistance;
 				nearestFishingSpot = *it;
 			}
@@ -135,31 +133,43 @@ public:
 		return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
 	}
 private:
+	static Mediator* instance;
 	Mediator() {}
 	~Mediator() {}
-	static Mediator* instance;
 };
+
+Mediator* Mediator::instance = 0;
+Mediator* Mediator::Instance() {
+	if (!instance)
+	{
+		instance = new Mediator();
+	}
+	return instance;
+}
+
 
 class Settler {
 public:
-	Settler(SettlerType* pType) : type(pType), pos(Vector3(0, 0, 0)) {	}
+	Settler(SettlerType* pType) : type(pType), pos(Vector3(0, 0, 0)), professionType("woodChopper") {	}
 	~Settler() { }
 	SettlerType* type;
 
 	void Update(){
-
+		if (currentRG == nullptr || currentRG->isEmpty()) findNewResourceGroup();
+		else currentRG->harvest();
 	}
 
 private:
 	Vector3 pos;
 
-	ResourceGroup* currentRG;
 	std::string professionType;
+	ResourceGroup* currentRG;
 
 	void findNewResourceGroup(){
 		if (professionType == "woodChopper")
 		{
 			currentRG = Mediator::Instance()->getBestForest(pos);
+			std::cout << "Found new resource group: " << currentRG->isEmpty() << std::endl;
 		}
 		else
 		{
@@ -203,13 +213,23 @@ int main()
 {
 	World* world = new World();
 
-	Settler settler = world->CreateNewSettler(Builder);
-	Settler settler2 = world->CreateNewSettler(Builder);
-	std::cout <<  "I'm a Settler of type " << settler.type << std::endl;
-	std::cout <<  "I'm a Settler of type " << settler2.type << std::endl;
+	Forest* forest1 = new Forest();
+	Forest* forest2 = new Forest();
+	Mediator::Instance()->forests.push_back(forest1);
+	Mediator::Instance()->forests.push_back(forest2);
 
-	char c;
-	std::cin >> c;
+	Settler settler = world->CreateNewSettler(Builder);
+	
+	//Settler settler2 = world->CreateNewSettler(Builder);
+	//std::cout <<  "I'm a Settler of type " << settler.type << std::endl;
+	//std::cout <<  "I'm a Settler of type " << settler2.type << std::endl;
+
+	for(int i = 0; i < 16; ++i) {
+		char c;
+		std::cout << "Press Enter" << std::endl;
+		std::cin >> c;
+		settler.Update();
+	}
 
     return 0;
 }
