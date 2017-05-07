@@ -1,4 +1,15 @@
-﻿  MakePatternsWork.cpp
-e:\gebruikers\rosa corstjens\documenten\makepatternswork\makepatternswork.cpp(93): warning C4715: 'World::CreateNewSettler': not all control paths return a value
-  MakePatternsWork.vcxproj -> E:\Gebruikers\Rosa Corstjens\Documenten\MakePatternsWork\Debug\MakePatternsWork.exe
-  MakePatternsWork.vcxproj -> E:\Gebruikers\Rosa Corstjens\Documenten\MakePatternsWork\Debug\MakePatternsWork.pdb (Full PDB)
+﻿Build started 5/7/2017 6:57:45 PM.
+     1>Project "D:\japsor\Documents\Settlers-Concept\MakePatternsWork\MakePatternsWork.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\MakePatternsWork.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt MakePatternsWork.cpp
+         MakePatternsWork.cpp
+     1>d:\japsor\documents\settlers-concept\makepatternswork\makepatternswork.cpp(186): warning C4715: 'World::CreateNewSettler': not all control paths return a value
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\japsor\Documents\Settlers-Concept\MakePatternsWork\Debug\MakePatternsWork.exe" /INCREMENTAL /NOLOGO d3d11.lib d3dx11d.lib D3DCompiler.lib Effects11d.lib dxerr.lib dxgi.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\japsor\Documents\Settlers-Concept\MakePatternsWork\Debug\MakePatternsWork.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\japsor\Documents\Settlers-Concept\MakePatternsWork\Debug\MakePatternsWork.lib" /MACHINE:X86 Debug\MakePatternsWork.obj
+         Debug\stdafx.obj
+         MakePatternsWork.vcxproj -> D:\japsor\Documents\Settlers-Concept\MakePatternsWork\Debug\MakePatternsWork.exe
+     1>Done Building Project "D:\japsor\Documents\Settlers-Concept\MakePatternsWork\MakePatternsWork.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.86
