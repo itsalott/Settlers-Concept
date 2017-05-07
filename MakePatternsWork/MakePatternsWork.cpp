@@ -91,16 +91,16 @@ public:
 	Weapon(): Tool(WeaponTool) {}
 	~Weapon() {}
 
-	int getFireRange() override { return 5; }
-	int getPreciseness() override { return 10; }
+	int getFireRange() override { return fireRange; }
+	int getPreciseness() override { return preciseness; }
 
 	void useTool() override {
 		std::cout << "Weapon used" << std::endl;
 	}
 
 protected:
-	int fireRange;
-	int preciseness;
+	int fireRange = 5;
+	int preciseness = 10;
 };
 
 class WeaponUpgrade : public IWeapon {

@@ -1,4 +1,4 @@
-﻿Build started 5/7/2017 6:52:38 PM.
+﻿Build started 5/7/2017 6:57:45 PM.
      1>Project "D:\japsor\Documents\Settlers-Concept\MakePatternsWork\MakePatternsWork.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\MakePatternsWork.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt MakePatternsWork.cpp
