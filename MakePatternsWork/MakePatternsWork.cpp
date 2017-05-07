@@ -105,7 +105,7 @@ protected:
 
 class WeaponUpgrade : public Weapon {
 public:
-	WeaponUpgrade(Weapon baseWeapon) : weapon(baseWeapon), Weapon(0, 0) {}
+	WeaponUpgrade(Weapon baseWeapon) : weapon(baseWeapon), Weapon(baseWeapon.getFireRange(), baseWeapon.getPreciseness()) {}
 	~WeaponUpgrade() {}
 
 	int getFireRange() override{
