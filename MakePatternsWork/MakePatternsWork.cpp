@@ -55,14 +55,107 @@ public:
 	~SettlerType() {}
 };
 
+// ------------------ TOOLS ----------------------
+
+class ITool {
+public:
+	virtual void useTool() {}
+};
+
+class IWeapon {
+public:
+	virtual int getFireRange() { return 0; }
+	virtual int getPreciseness() { return 0; }
+};
+
+enum EnumToolTypes {
+	WeaponTool = 0,
+	AxeTool
+};
+
+class Tool : public ITool {
+public:
+	Tool(EnumToolTypes type) : type(type) {}
+	~Tool() {}
+
+protected: 
+	EnumToolTypes type;
+
+	void useTool() override {
+		std::cout << "Basic tool used" << std::endl;
+	}
+};
+
+class Weapon : public Tool {
+public:
+	Weapon(int fireRange, int precisness) : Tool(EnumToolTypes::WeaponTool), fireRange(fireRange), preciseness(precisness) {}
+	~Weapon() {}
+
+	virtual int getFireRange() { return fireRange; }
+	virtual int getPreciseness() { return preciseness; }
+
+	void useTool() override {
+		std::cout << "Weapon used" << std::endl;
+	}
+
+protected:
+	int fireRange;
+	int preciseness;
+};
+
+class WeaponUpgrade : public Weapon {
+public:
+	WeaponUpgrade(Weapon baseWeapon) : weapon(baseWeapon), Weapon(0, 0) {}
+	~WeaponUpgrade() {}
+
+	int getFireRange() override{
+		return weapon.getFireRange();
+	}
+
+	int getPreciseness() override {
+		return weapon.getPreciseness();
+	}
+
+protected:
+	Weapon weapon;
+};
+
+class GunpowderUpgrade : public WeaponUpgrade {
+public:
+	GunpowderUpgrade(Weapon baseWeapon) : WeaponUpgrade(baseWeapon) {}
+	~GunpowderUpgrade() {}
+
+	int getFireRange() override{
+		//std::cout << weapon.getFireRange() << std::endl;
+		return WeaponUpgrade::getFireRange() + 10;
+	}
+};
+
+class BarrelUpgrade : public WeaponUpgrade {
+public:
+	BarrelUpgrade(Weapon baseWeapon) : WeaponUpgrade(baseWeapon) {}
+	~BarrelUpgrade() {}
+
+	int getPreciseness() override {
+		return WeaponUpgrade::getPreciseness() + 8;
+	}
+};
+
+// ------------------ END TOOLS -------------------
+
 class Settler {
 public:
-	Settler(SettlerType* pType) : type(pType), pos(Vector3(0, 0, 0)) {	}
+	Settler(SettlerType* pType, Tool* tool = nullptr) : type(pType), pos(Vector3(0, 0, 0)), currentTool(tool) {	}
 	~Settler() { }
+	
 	SettlerType* type;
+	void switchTool(Tool* newTool) {
+		currentTool = newTool;
+	}
 
 private:
 	Vector3 pos;
+	Tool* currentTool;
 };
 
 class World {
@@ -75,19 +168,19 @@ public:
 		types[3] = new SettlerType("TraderModel", "TraderTexture", "TraderMaterial", Trader);
 	}
 
-	Settler CreateNewSettler(EnumSettlerType type) {
+	Settler CreateNewSettler(EnumSettlerType type, Tool* tool = nullptr) {
 		switch(type) {
 		case Builder:
-			return Settler(types[0]);
+			return Settler(types[0], tool);
 			break;
 		case Civilian:
-			return Settler(types[1]);
+			return Settler(types[1], tool);
 			break;
 		case Fighter:
-			return Settler(types[2]);
+			return Settler(types[2], tool);
 			break;
 		case Trader:
-			return Settler(types[3]);
+			return Settler(types[3], tool);
 			break;
 		}
 	}
@@ -100,10 +193,19 @@ int main()
 {
 	World* world = new World();
 
+	Weapon basicWeapon = Weapon(5, 10);
+	std::cout << "Basic weapon has " << basicWeapon.getPreciseness() << " preciseness and " << basicWeapon.getFireRange() << " fire range." << std::endl;
+
+	BarrelUpgrade barrelUpgrade = GunpowderUpgrade(basicWeapon);
+	std::cout << "Weapon upgraded with barrel has " << barrelUpgrade.getPreciseness() << " preciseness and " << barrelUpgrade.getFireRange() << " fire range." << std::endl;
+
+	GunpowderUpgrade gunpowderUpgrade = GunpowderUpgrade(barrelUpgrade);
+	std::cout << "Weapon upgraded with gunpowder has " << gunpowderUpgrade.getPreciseness() << " preciseness and " << gunpowderUpgrade.getFireRange() << " fire range." << std::endl;
+
 	Settler settler = world->CreateNewSettler(Builder);
 	Settler settler2 = world->CreateNewSettler(Builder);
-	std::cout <<  "I'm a Settler of type " << settler.type << std::endl;
-	std::cout <<  "I'm a Settler of type " << settler2.type << std::endl;
+	//std::cout <<  "I'm a Settler of type " << settler.type << std::endl;
+	//std::cout <<  "I'm a Settler of type " << settler2.type << std::endl;
 
 	char c;
 	std::cin >> c;
