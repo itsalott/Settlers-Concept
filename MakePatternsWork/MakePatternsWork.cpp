@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <list>
+#include <cmath>
 
 class Mesh {
 public:
@@ -55,14 +57,115 @@ public:
 	~SettlerType() {}
 };
 
+class ResourceGroup{
+public:
+	ResourceGroup() : pos(0, 0, 0)
+	{ 
+		resourcesLeft = 10;
+	}
+	~ResourceGroup() {}
+	bool isEmpty(){ return resourcesLeft <= 0; }
+	int harvest(){ resourcesLeft--; return 1; }
+	Vector3 pos;
+
+private:
+	int resourcesLeft;
+};
+
+class Forest : public ResourceGroup{
+public:
+	Forest() {}
+	~Forest() {}
+};
+
+class FishingSpot : public ResourceGroup{
+public:
+	FishingSpot() {}
+	~FishingSpot() {}
+};
+
+class Mediator{
+public:
+	static Mediator* Instance(){ 
+		if (instance == nullptr)
+		{
+			instance = new Mediator();
+		}
+		return instance;
+	}
+	std::list<Forest*> forests;
+	std::list<FishingSpot*> fishingSpots;
+
+	Forest* getBestForest(Vector3 settlerPos){
+		Forest* nearestForest;
+		float distance = 1000;
+
+		std::list<Forest*>::iterator it;
+		for (it = forests.begin(); it != forests.end(); it++)
+		{
+			float newDistance = distanceBetweenVectors((*it)->pos, settlerPos);
+			if (newDistance < distance){
+				distance = newDistance;
+				nearestForest = *it;
+			}
+		}
+
+		return nearestForest;
+	}
+
+	FishingSpot* getBestFishingSpot(Vector3 settlerPos){
+		FishingSpot* nearestFishingSpot;
+		float distance = 1000;
+
+		std::list<FishingSpot*>::iterator it;
+		for (it = fishingSpots.begin(); it != fishingSpots.end(); it++)
+		{
+			float newDistance = distanceBetweenVectors((*it)->pos, settlerPos);
+			if (newDistance < distance){
+				distance = newDistance;
+				nearestFishingSpot = *it;
+			}
+		}
+
+		return nearestFishingSpot;
+	}
+	
+	float distanceBetweenVectors(Vector3 a, Vector3 b)
+	{
+		return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
+	}
+private:
+	Mediator() {}
+	~Mediator() {}
+	static Mediator* instance;
+};
+
 class Settler {
 public:
 	Settler(SettlerType* pType) : type(pType), pos(Vector3(0, 0, 0)) {	}
 	~Settler() { }
 	SettlerType* type;
 
+	void Update(){
+
+	}
+
 private:
 	Vector3 pos;
+
+	ResourceGroup* currentRG;
+	std::string professionType;
+
+	void findNewResourceGroup(){
+		if (professionType == "woodChopper")
+		{
+			currentRG = Mediator::Instance()->getBestForest(pos);
+		}
+		else
+		{
+			currentRG = Mediator::Instance()->getBestFishingSpot(pos);
+		}
+	}
 };
 
 class World {
