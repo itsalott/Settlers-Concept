@@ -1,4 +1,8 @@
-﻿  MakePatternsWork.cpp
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\makepatternswork.cpp(349): warning C4715: 'World::CreateNewSettler': not all control paths return a value
+﻿  World.cpp
+e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\world.cpp(43): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\world.cpp(48): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\world.cpp(49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\world.cpp(71): warning C4715: 'World::createNewSettler': not all control paths return a value
   MakePatternsWork.vcxproj -> E:\Gebruikers\Rosa Corstjens\Documenten\Settlers-Concept\MakePatternsWork\x64\Debug\MakePatternsWork.exe
   MakePatternsWork.vcxproj -> E:\Gebruikers\Rosa Corstjens\Documenten\Settlers-Concept\MakePatternsWork\x64\Debug\MakePatternsWork.pdb (Full PDB)
