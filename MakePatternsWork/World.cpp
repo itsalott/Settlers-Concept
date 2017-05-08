@@ -39,7 +39,7 @@ void World::init() {
 }
 
 void World::update() {
-	receiveUpdateDataToServer();
+	receiveUpdateDataFromServer();
 
 	for (int i = 0; i < settlers.size(); ++i) {
 		std::cout << "\nUpdating settler " << i << std::endl;
@@ -65,13 +65,15 @@ void World::update() {
 	sendUpdateDataToServer();
 }
 
-void World::receiveUpdateDataToServer() {
+void World::receiveUpdateDataFromServer() {
 	std::vector<ProxySettler> proxySettlers = Server::receiveProxyObjectsFromServer();
-
+	std::cout << "\nWorld received " << proxySettlers.size() << " proxy objects..." << std::endl;
 	settlers.clear();
 	for (int i = 0; i < proxySettlers.size(); ++i) {
 		settlers.push_back(Settler::createSettler(proxySettlers[i]));
 	}
+
+	std::cout << "Converted message size in bytes: " << sizeof(std::vector<Settler>) + (sizeof(Settler) * proxySettlers.size()) << std::endl;
 }
 
 void World::sendUpdateDataToServer() {

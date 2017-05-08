@@ -22,7 +22,7 @@ private:
 
 	void createResourceGroups();
 	void sendUpdateDataToServer();
-	void receiveUpdateDataToServer();
+	void receiveUpdateDataFromServer();
 
 	World();
 	~World();

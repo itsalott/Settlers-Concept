@@ -1,26 +1,42 @@
-﻿  World.cpp
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\world.cpp(49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\world.cpp(82): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  Grid.cpp
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.cpp(53): warning C4018: '<': signed/unsigned mismatch
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.cpp(54): warning C4018: '<': signed/unsigned mismatch
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.cpp(60): warning C4018: '<': signed/unsigned mismatch
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.cpp(61): warning C4018: '<': signed/unsigned mismatch
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.cpp(68): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.cpp(72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.cpp(76): warning C4018: '>=': signed/unsigned mismatch
-  Generating Code...
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\world.cpp(99): warning C4715: 'World::createNewSettler': not all control paths return a value
-  Compiling...
-  WorldObjects.cpp
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Server.cpp
-  Mediator.cpp
-  MakePatternsWork.cpp
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-e:\gebruikers\rosa corstjens\documenten\settlers-concept\makepatternswork\makepatternswork.cpp(17): warning C4101: 'c': unreferenced local variable
-  Generating Code...
-  MakePatternsWork.vcxproj -> E:\Gebruikers\Rosa Corstjens\Documenten\Settlers-Concept\MakePatternsWork\x64\Debug\MakePatternsWork.exe
-  MakePatternsWork.vcxproj -> E:\Gebruikers\Rosa Corstjens\Documenten\Settlers-Concept\MakePatternsWork\x64\Debug\MakePatternsWork.pdb (Full PDB)
+﻿Build started 5/8/2017 6:52:21 PM.
+     1>Project "D:\japsor\Documents\Settlers-Concept\MakePatternsWork\MakePatternsWork.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"x64\Debug\MakePatternsWork.pch" /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt Grid.cpp MakePatternsWork.cpp Mediator.cpp Server.cpp World.cpp WorldObjects.cpp
+         Grid.cpp
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.cpp(53): warning C4018: '<': signed/unsigned mismatch
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.cpp(54): warning C4018: '<': signed/unsigned mismatch
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.cpp(60): warning C4018: '<': signed/unsigned mismatch
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.cpp(61): warning C4018: '<': signed/unsigned mismatch
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.cpp(68): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.cpp(72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.cpp(76): warning C4018: '>=': signed/unsigned mismatch
+         Generating Code...
+         Compiling...
+         WorldObjects.cpp
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+         World.cpp
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>d:\japsor\documents\settlers-concept\makepatternswork\world.cpp(49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+     1>d:\japsor\documents\settlers-concept\makepatternswork\world.cpp(84): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+         Server.cpp
+         Mediator.cpp
+         MakePatternsWork.cpp
+     1>d:\japsor\documents\settlers-concept\makepatternswork\grid.h(25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+     1>d:\japsor\documents\settlers-concept\makepatternswork\makepatternswork.cpp(17): warning C4101: 'c': unreferenced local variable
+         Generating Code...
+     1>d:\japsor\documents\settlers-concept\makepatternswork\world.cpp(101): warning C4715: 'World::createNewSettler': not all control paths return a value
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\japsor\Documents\Settlers-Concept\MakePatternsWork\x64\Debug\MakePatternsWork.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\japsor\Documents\Settlers-Concept\MakePatternsWork\x64\Debug\MakePatternsWork.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\japsor\Documents\Settlers-Concept\MakePatternsWork\x64\Debug\MakePatternsWork.lib" /MACHINE:X64 x64\Debug\Grid.obj
+         x64\Debug\MakePatternsWork.obj
+         x64\Debug\Mediator.obj
+         x64\Debug\Server.obj
+         x64\Debug\stdafx.obj
+         x64\Debug\World.obj
+         x64\Debug\WorldObjects.obj
+         MakePatternsWork.vcxproj -> D:\japsor\Documents\Settlers-Concept\MakePatternsWork\x64\Debug\MakePatternsWork.exe
+     1>Done Building Project "D:\japsor\Documents\Settlers-Concept\MakePatternsWork\MakePatternsWork.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.06

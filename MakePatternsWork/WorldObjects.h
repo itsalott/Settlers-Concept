@@ -88,10 +88,11 @@ public:
 	static ProxySettler createProxy(Settler settler);
 
 	EnumSettlerType type;
+	Vector3 pos;
+private:
 	Tool* currentTool;				// should be proxytool
 	Profession professionType;
 	ResourceGroup* currentRG;
-	Vector3 pos;
 };
 
 class Settler : public WorldObject, public ISettler {
