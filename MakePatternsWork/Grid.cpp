@@ -7,6 +7,13 @@ Cell::Cell() : x(0), y(0) { }
 Cell::Cell(int x, int y) : x(x), y(y) { }
 
 void Cell::addObject(WorldObject* object) {
+	for (int i = 0; i < objectsInCell.size(); ++i) {
+		std::cout << "\tSearching for same obj in cell " << i << std::endl;
+		if(objectsInCell[i]->id == object->id){
+			std::cout << "\tSame object found and removed" << i << std::endl;
+			objectsInCell.erase(objectsInCell.begin() + i);
+		}
+	}
 	objectsInCell.push_back(object);
 }
 

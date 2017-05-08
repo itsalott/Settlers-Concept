@@ -28,6 +28,7 @@ class WorldObject {
 public:
 	WorldObject();
 
+	int id;
 	Vector3 previousPos;
 	Vector3 pos;
 	WorldObjecType worldObjectType;

@@ -30,9 +30,10 @@ void World::init() {
 	Tool* fishingNet = new FishingNet();
 	Tool* axe = new Axe();
 	Settler settler = (*createNewSettler(Builder, Fisherman, Vector3(250, 0, 35), fishingNet));
-	Settler settler2 = (*createNewSettler(Builder, WoodChopper, Vector3(150, 0, 230), axe));
+	settler.id = 1;
+	//Settler settler2 = (*createNewSettler(Builder, WoodChopper, Vector3(150, 0, 230), axe));
 	settlers.push_back(settler);
-	settlers.push_back(settler2);
+	//settlers.push_back(settler2);
 
 	sendUpdateDataToServer();
 }
@@ -99,10 +100,13 @@ Settler* World::createNewSettler(EnumSettlerType type, Profession prof, Vector3 
 
 void World::createResourceGroups() {
 	Forest* forest1 = new Forest(Vector3(20, 0, 510), 15);
+	forest1->id = 2;
 	Forest* forest2 = new Forest(Vector3(400, 0, 330), 5);
+	forest2->id = 3;
 	Mediator::Instance()->forests.push_back(forest1);
 	Mediator::Instance()->forests.push_back(forest2);
 
 	FishingSpot* fishingSpot1 = new FishingSpot(Vector3(100, 0, 850), 8);
+	fishingSpot1->id = 4;
 	Mediator::Instance()->fishingSpots.push_back(fishingSpot1);
 }
