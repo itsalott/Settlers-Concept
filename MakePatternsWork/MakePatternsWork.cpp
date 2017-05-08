@@ -6,9 +6,11 @@
 #include <list>
 #include <vector>
 #include "World.h"
+#include "Server.h"
 
 int main()
 {
+	Server server = Server();
 	World::Instance()->init();
 
 	for(int i = 0; i < 30; ++i) {

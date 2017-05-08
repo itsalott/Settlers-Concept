@@ -148,6 +148,7 @@
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="Mediator.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Tools.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="MakePatternsWork.cpp" />
     <ClCompile Include="Mediator.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

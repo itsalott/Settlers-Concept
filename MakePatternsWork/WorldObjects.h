@@ -5,6 +5,8 @@
 #include "Helpers.h"
 #include "Tools.h"
 
+class Settler;
+
 class SettlerType {
 public:
 	Mesh model;
@@ -66,10 +68,38 @@ public:
 	~FishingSpot() {}
 };
 
-class Settler : public WorldObject {
+class ISettler {
 public:
-	Settler(SettlerType* pType, Profession prof, Vector3 worldPos, Tool* tool = nullptr);
-	~Settler() { }
+	void update();
+	void switchTool(Tool* newTool);
+
+protected:
+	void findNewResourceGroup();
+	void move();
+};
+
+class ProxySettler : public ISettler{
+	friend class Settler;
+public:
+	ProxySettler(EnumSettlerType pType, Profession prof, Vector3 worldPos, Tool* tool = nullptr, ResourceGroup* rg = nullptr);
+	~ProxySettler() { }
+
+	static ProxySettler createProxy(Settler settler);
+
+	EnumSettlerType type;
+	Tool* currentTool;				// should be proxytool
+	Profession professionType;
+	ResourceGroup* currentRG;
+	Vector3 pos;
+};
+
+class Settler : public WorldObject, public ISettler {
+	friend class ProxySettler;
+public:
+	Settler(SettlerType* pType, Profession prof, Vector3 worldPos, Tool* tool = nullptr, ResourceGroup* rg = nullptr);
+	~Settler();
+
+	static Settler createSettler(ProxySettler settler);
 
 	SettlerType* type;
 
@@ -78,7 +108,6 @@ public:
 
 private:
 	Tool* currentTool;
-
 	Profession professionType;
 	ResourceGroup* currentRG;
 

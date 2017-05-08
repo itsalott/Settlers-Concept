@@ -12,15 +12,17 @@ public:
 	void init();
 	void update();
 
-	Settler* createNewSettler(EnumSettlerType type, Profession prof, Vector3 worldPos, Tool* tool = nullptr);
+	Settler* createNewSettler(EnumSettlerType type, Profession prof, Vector3 worldPos, Tool* tool = nullptr, ResourceGroup* rg = nullptr);
 
 private:
 	static World* instance;
 
 	SettlerType** types;
-	std::vector<Settler*> settlers;
+	std::vector<Settler> settlers;
 
 	void createResourceGroups();
+	void sendUpdateDataToServer();
+	void receiveUpdateDataToServer();
 
 	World();
 	~World();

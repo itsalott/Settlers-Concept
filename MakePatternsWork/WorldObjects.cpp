@@ -43,12 +43,56 @@ void ResourceGroup::update() {
 	// for example: chance to respawn resources.
 }
 
-Settler::Settler(SettlerType* pType, Profession prof, Vector3 worldPos, Tool* tool)
-: type(pType), currentTool(tool), professionType(prof) {
+ProxySettler::ProxySettler(EnumSettlerType pType, Profession prof, Vector3 worldPos, Tool* tool, ResourceGroup* rg )
+: type(pType), currentTool(tool), professionType(prof), pos(worldPos), currentRG(rg){}
+
+ProxySettler ProxySettler::createProxy(Settler settler) {
+	switch(settler.type->type) {
+	case Builder:
+		return ProxySettler(Builder, settler.professionType, settler.pos, settler.currentTool, settler.currentRG);
+
+	case Civilian:
+		return ProxySettler(Civilian, settler.professionType, settler.pos, settler.currentTool, settler.currentRG);
+
+	case Fighter:
+		return ProxySettler(Fighter, settler.professionType, settler.pos, settler.currentTool, settler.currentRG);
+
+	case Trader:
+		return ProxySettler(Trader, settler.professionType, settler.pos, settler.currentTool, settler.currentRG);
+
+	default:
+		return ProxySettler(Builder, settler.professionType, settler.pos, settler.currentTool, settler.currentRG);
+	}
+}
+
+Settler Settler::createSettler(ProxySettler settler) {
+	switch (settler.type) {
+	case Builder:
+		return (*World::Instance()->createNewSettler(Builder, settler.professionType, settler.pos, settler.currentTool, settler.currentRG));
+		
+	case Civilian:
+		return (*World::Instance()->createNewSettler(Civilian, settler.professionType, settler.pos, settler.currentTool, settler.currentRG));
+
+	case Fighter:
+		return (*World::Instance()->createNewSettler(Fighter, settler.professionType, settler.pos, settler.currentTool, settler.currentRG));
+
+	case Trader:
+		return (*World::Instance()->createNewSettler(Trader, settler.professionType, settler.pos, settler.currentTool, settler.currentRG));
+
+	default:
+		return (*World::Instance()->createNewSettler(Builder, settler.professionType, settler.pos, settler.currentTool));
+	}
+}
+
+Settler::Settler(SettlerType* pType, Profession prof, Vector3 worldPos, Tool* tool, ResourceGroup* rg)
+: type(pType), currentTool(tool), professionType(prof), currentRG(rg){
 	pos = worldPos;
 	previousPos = pos;
 	worldObjectType = SettlerObject;
 	addToGrid();
+}
+
+Settler::~Settler() {
 }
 
 void Settler::update() {
@@ -56,11 +100,12 @@ void Settler::update() {
 		std::cout << " >> I don't have a tool, so I can't work" << std::endl;
 		return;
 	}
+	
 	if (currentRG == nullptr || currentRG->isEmpty()) {
 		std::cout << " >> I don't have a valid resource group right now" << std::endl;
 		findNewResourceGroup();
 	}
-	else if(pos.x != currentRG->pos.x && pos.z != currentRG->pos.z) {
+	else if (pos.x != currentRG->pos.x && pos.z != currentRG->pos.z) {
 		// not at resource location right now
 		move();
 	}
@@ -69,6 +114,7 @@ void Settler::update() {
 		currentTool->useTool();
 		currentRG->harvest();
 	}
+	
 }
 
 void Settler::move() {

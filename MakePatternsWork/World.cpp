@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "World.h"
 #include "Mediator.h"
+#include "Server.h"
 
 World::World(){}
 World::~World() { }
@@ -28,45 +29,71 @@ void World::init() {
 
 	Tool* fishingNet = new FishingNet();
 	Tool* axe = new Axe();
-	Settler* settler = createNewSettler(Builder, Fisherman, Vector3(250, 0, 35), fishingNet);
-	Settler* settler2 = createNewSettler(Builder, WoodChopper, Vector3(150, 0, 230), axe);
+	Settler settler = (*createNewSettler(Builder, Fisherman, Vector3(250, 0, 35), fishingNet));
+	Settler settler2 = (*createNewSettler(Builder, WoodChopper, Vector3(150, 0, 230), axe));
 	settlers.push_back(settler);
 	settlers.push_back(settler2);
+
+	sendUpdateDataToServer();
 }
 
 void World::update() {
+	receiveUpdateDataToServer();
+
 	for (int i = 0; i < settlers.size(); ++i) {
 		std::cout << "\nUpdating settler " << i << std::endl;
-		settlers[i]->update();
+		settlers[i].update();
 
 		// test for grid
-		std::vector<WorldObject*> objectsAtPos = grid->getObjectsAtIndex(grid->worldToGrid(settlers[i]->pos).x, grid->worldToGrid(settlers[i]->pos).y);
+		std::vector<WorldObject*> objectsAtPos = grid->getObjectsAtIndex(grid->worldToGrid(settlers[i].pos).x, grid->worldToGrid(settlers[i].pos).y);
 		for (int j = 0; j < objectsAtPos.size(); ++j) {
 			std::cout << "Located world object type " << objectsAtPos[j]->worldObjectType << " at this Settlers location" << std::endl;
 		}
 
-		std::vector<Cell*> neighborCellsAtPos = grid->getCellAt(grid->worldToGrid(settlers[i]->pos).x, grid->worldToGrid(settlers[i]->pos).y)->getNeighbors();
-		Cell* currCell = grid->getCellAt(grid->worldToGrid(settlers[i]->pos).x, grid->worldToGrid(settlers[i]->pos).y);
-		std::cout << "Current cell: " << currCell->getPos().x << ", " << currCell->getPos().y << std::endl;
-		for (int j = 0; j < neighborCellsAtPos.size(); ++j) {
-			if (neighborCellsAtPos[j] == nullptr) continue;
-			std::cout << "Neighboring cell " << j << ": " << neighborCellsAtPos[j]->getPos().x << ", " << neighborCellsAtPos[j]->getPos().y << std::endl;
-		}
+		//std::vector<Cell*> neighborCellsAtPos = grid->getCellAt(grid->worldToGrid(settlers[i].pos).x, grid->worldToGrid(settlers[i].pos).y)->getNeighbors();
+		//Cell* currCell = grid->getCellAt(grid->worldToGrid(settlers[i].pos).x, grid->worldToGrid(settlers[i].pos).y);
+		//std::cout << "Current cell: " << currCell->getPos().x << ", " << currCell->getPos().y << std::endl;
+		//for (int j = 0; j < neighborCellsAtPos.size(); ++j) {
+			//if (neighborCellsAtPos[j] == nullptr) continue;
+			//std::cout << "Neighboring cell " << j << ": " << neighborCellsAtPos[j]->getPos().x << ", " << neighborCellsAtPos[j]->getPos().y << std::endl;
+		//}
 	}
 
 	// update resource locations
+
+	sendUpdateDataToServer();
 }
 
-Settler* World::createNewSettler(EnumSettlerType type, Profession prof, Vector3 worldPos, Tool* tool) {
+void World::receiveUpdateDataToServer() {
+	std::vector<ProxySettler> proxySettlers = Server::receiveProxyObjectsFromServer();
+
+	settlers.clear();
+	for (int i = 0; i < proxySettlers.size(); ++i) {
+		settlers.push_back(Settler::createSettler(proxySettlers[i]));
+	}
+}
+
+void World::sendUpdateDataToServer() {
+	std::vector<ProxySettler> proxySettlers;
+
+	for (int i = 0; i < settlers.size(); ++i) {
+		proxySettlers.push_back(ProxySettler::createProxy(settlers[i]));	
+		grid->getCellAt(grid->worldToGrid(settlers[i].pos).x, World::Instance()->grid->worldToGrid(settlers[i].pos).y)->removeObject(&settlers[i]);
+	}
+
+	Server::sendProxyObjectsToServer(proxySettlers);
+}
+
+Settler* World::createNewSettler(EnumSettlerType type, Profession prof, Vector3 worldPos, Tool* tool, ResourceGroup* rg) {
 	switch (type) {
 	case Builder:
-		return new Settler(types[0], prof, worldPos, tool);
+		return new Settler(types[0], prof, worldPos, tool, rg);
 	case Civilian:
-		return new Settler(types[1], prof, worldPos, tool);
+		return new Settler(types[1], prof, worldPos, tool, rg);
 	case Fighter:
-		return new Settler(types[2], prof, worldPos, tool);
+		return new Settler(types[2], prof, worldPos, tool, rg);
 	case Trader:
-		return new Settler(types[3], prof, worldPos, tool);
+		return new Settler(types[3], prof, worldPos, tool, rg);
 	}
 }
 
