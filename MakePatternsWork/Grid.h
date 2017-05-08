@@ -13,8 +13,6 @@ public:
 	Cell(int x, int y);
 	~Cell() {}
 
-	std::vector<WorldObject*> objectsInCell;
-
 	bool isOccupied() { return objectsInCell.size() == 0 ? false : true; }
 	std::vector<WorldObject*> getAllObjects() { return objectsInCell; }
 
@@ -25,6 +23,7 @@ public:
 	Vector2 getPos() { return Vector2(x, y); }
 
 private:
+	std::vector<WorldObject*> objectsInCell;
 	int x, y;
 	std::vector<Cell*> neighbors;
 };
@@ -34,7 +33,7 @@ public:
 	Grid(int width, int height);
 	~Grid() { }
 
-	unsigned int width, height, cellsize;
+	unsigned int width, height, cellSize;
 	Cell* cells;
 	Vector3 originInWorld;
 

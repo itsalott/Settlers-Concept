@@ -38,7 +38,7 @@ std::vector<Cell*> Cell::getNeighbors() {
 }
 
 Grid::Grid(int width, int height) : width(width), height(height), originInWorld(0, 0, 0) {
-	cellsize = 100;
+	cellSize = 100;
 	cells = new Cell[width * height];
 }
 
@@ -58,11 +58,11 @@ void Grid::buildGrid() {
 }
 
 Vector3 Grid::gridToWorld(int x, int y) {
-	return Vector3(x * cellsize, 0, y * cellsize);
+	return Vector3(x * cellSize, 0, y * cellSize);
 }
 
 Vector2 Grid::worldToGrid(Vector3 pos) {
-	return Vector2((int)(pos.x / cellsize), (int)(pos.z / cellsize));
+	return Vector2((int)(pos.x / cellSize), (int)(pos.z / cellSize));
 }
 
 Cell* Grid::getCellAt(int x, int y) {
