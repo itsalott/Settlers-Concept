@@ -66,6 +66,9 @@ class IWeapon : ITool {
 public:
 	virtual int getFireRange() { return 0; }
 	virtual int getPreciseness() { return 0; }
+
+	virtual bool isBase() { return false; }
+	virtual IWeapon* removeUpgrade() { return nullptr; }
 };
 
 enum EnumToolTypes {
@@ -98,6 +101,14 @@ public:
 		std::cout << "Weapon used" << std::endl;
 	}
 
+	bool isBase() override { 
+		return true;
+	}
+
+	IWeapon* removeUpgrade() override { 
+		return this;
+	}
+
 protected:
 	int fireRange = 5;
 	int preciseness = 10;
@@ -114,6 +125,10 @@ public:
 
 	int getPreciseness() override {
 		return weapon->getPreciseness();
+	}
+
+	IWeapon* removeUpgrade() override {
+		return weapon;
 	}
 
 protected:
@@ -202,7 +217,21 @@ int main()
 	weapon = new BarrelUpgrade(weapon);
 	std::cout << "Weapon upgraded with barrel has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
 
-	
+	/*weapon = weapon->removeUpgrade();
+	std::cout << "Weapon downgraded (without barrel) has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+
+	weapon = weapon->removeUpgrade();
+	std::cout << "Weapon downgraded (without gunpowder) has " << weapon->getPreciseness() << " preciseness and " << weapon->getFireRange() << " fire range." << std::endl;
+	*/
+
+	IWeapon* base = weapon;
+	while(!base->isBase()) {
+		base = base->removeUpgrade();
+		std::cout << "Weapon downgraded has " << base->getPreciseness() << " preciseness and " << base->getFireRange() << " fire range." << std::endl;
+	}
+
+	std::cout << "Base weapon downgraded has " << base->getPreciseness() << " preciseness and " << base->getFireRange() << " fire range." << std::endl;
+
 
 	Settler settler = world->CreateNewSettler(Builder);
 	Settler settler2 = world->CreateNewSettler(Builder);
